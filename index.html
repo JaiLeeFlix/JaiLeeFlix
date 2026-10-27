@@ -1,177 +1,368 @@
 <!DOCTYPE html>
 <html lang="tl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JaiLeeFlix - Fast & Automatic Full Movies</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: #0a0a0a; color: #fff; padding: 20px; overflow-x: hidden; }
-        header { text-align: center; padding: 40px 0 20px 0; }
-        h1 { color: #e50914; font-size: 2.8rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; text-shadow: 0 0 10px rgba(229,9,20,0.5); }
-        p { color: #aaa; font-size: 14px; }
-        .search-wrapper { display: flex; justify-content: center; margin-top: 20px; }
-        .search-box { padding: 15px 25px; width: 80%; max-width: 600px; border: 2px solid #333; border-radius: 50px; font-size: 16px; background-color: #161616; color: white; outline: none; transition: 0.3s ease; text-align: center; }
-        .search-box:focus { border-color: #e50914; box-shadow: 0 0 15px rgba(229, 9, 20, 0.6); background-color: #1f1f1f; }
-        .movie-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 30px 0; max-width: 1200px; margin: 0 auto; }
-        .movie-card { background-color: #141414; border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s; position: relative; display: flex; flex-direction: column; }
-        .movie-card:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(229, 9, 20, 0.5); }
-        .poster-container { position: relative; width: 100%; height: 240px; background-color: #222; }
-        .movie-card img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s; }
-        .movie-info { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(to top, #111, #141414); }
-        .movie-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
-        .movie-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #aaa; }
-        .movie-rating { color: #f5c518; font-weight: bold; }
-        .play-badge { position: absolute; top: 10px; left: 10px; background: #e50914; color: white; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .ads-container { background-color: #111; text-align: center; padding: 20px; margin: 15px auto; border: 1px dashed #444; color: #666; border-radius: 8px; max-width: 1200px; font-size: 13px; }
-        .loading-trigger { text-align: center; padding: 20px; color: #aaa; font-weight: bold; font-size: 16px; display: none; }
-        
-        /* FAST MODAL VIDEO PLAYER */
-        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(5px); }
-        .modal-content { position: relative; margin: 4% auto; width: 92%; max-width: 1000px; background-color: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 0 30px rgba(229,9,20,0.3); }
-        .close-btn { position: absolute; top: -45px; right: 0; color: #fff; font-size: 16px; font-weight: bold; cursor: pointer; background: #e50914; padding: 8px 16px; border-radius: 4px; border: none; transition: 0.2s; }
-        .close-btn:hover { background: #b81d24; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .modal-footer { padding: 15px 20px; font-size: 16px; font-weight: bold; background-color: #141414; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #222; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JAILEEFLIX - Ultimate Streaming Application</title>
+<style>
+body {
+background-color: #141414;
+color: white;
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+margin: 0;
+padding: 20px;
+}
+.header {
+text-align: center;
+padding: 20px 0;
+}
+.logo {
+color: #E50914;
+font-size: 3.5rem;
+font-weight: bold;
+letter-spacing: 2px;
+margin: 0;
+text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+}
+.tagline {
+color: #aaa;
+font-size: 0.9rem;
+margin-top: 5px;
+}
+.search-box {
+text-align: center;
+margin: 20px 0;
+}
+.search-box input {
+width: 85%;
+max-width: 500px;
+padding: 14px 20px;
+border-radius: 30px;
+border: 1px solid #444;
+background-color: #222;
+color: white;
+font-size: 1rem;
+outline: none;
+text-align: center;
+transition: border 0.3s;
+}
+.search-box input:focus {
+border: 1px solid #E50914;
+}
+.tabs-container {
+display: flex;
+justify-content: center;
+gap: 10px;
+margin: 20px 0;
+flex-wrap: wrap;
+}
+.tab-btn {
+background-color: #222;
+color: white;
+border: 1px solid #333;
+padding: 10px 20px;
+border-radius: 20px;
+cursor: pointer;
+font-weight: bold;
+font-size: 0.9rem;
+transition: all 0.3s;
+}
+.tab-btn.active, .tab-btn:hover {
+background-color: #E50914;
+border-color: #E50914;
+}
+.player-container {
+max-width: 900px;
+margin: 20px auto;
+background: #000;
+padding: 15px;
+border-radius: 8px;
+display: none;
+box-shadow: 0px 4px 20px rgba(229, 9, 20, 0.4);
+}
+iframe {
+width: 100%;
+height: 450px;
+border: none;
+border-radius: 4px;
+}
+@media (max-width: 600px) {
+iframe { height: 250px; }
+}
+.active-title {
+margin-top: 12px;
+font-size: 1.3rem;
+font-weight: bold;
+text-align: center;
+color: #E50914;
+}
+.episode-selector {
+margin-top: 15px;
+display: flex;
+gap: 15px;
+justify-content: center;
+background: #222;
+padding: 10px;
+border-radius: 6px;
+}
+.episode-selector label {
+font-weight: bold;
+font-size: 0.9rem;
+align-self: center;
+}
+.episode-selector select {
+background: #000;
+color: white;
+border: 1px solid #444;
+padding: 5px 10px;
+border-radius: 4px;
+outline: none;
+}
+.movie-section {
+max-width: 1200px;
+margin: 40px auto;
+}
+.section-title {
+font-size: 1.6rem;
+font-weight: bold;
+margin-bottom: 20px;
+border-left: 5px solid #E50914;
+padding-left: 12px;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+.movie-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+gap: 20px;
+}
+.movie-card {
+background-color: #1f1f1f;
+border-radius: 8px;
+overflow: hidden;
+cursor: pointer;
+transition: transform 0.3s, box-shadow 0.3s;
+box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+.movie-card:hover {
+transform: scale(1.08);
+box-shadow: 0 8px 15px rgba(229,9,20,0.3);
+}
+.poster-img {
+width: 100%;
+height: 210px;
+object-fit: cover;
+border-bottom: 3px solid #E50914;
+}
+.title-box {
+padding: 10px;
+font-size: 0.85rem;
+text-align: center;
+font-weight: bold;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>JAILEEFLIX</h1>
-        <p>🚀 Super-Fast Loading • Libo-libong Pelikula • Auto-Update sa Buong Mundo</p>
-        <div class="search-wrapper">
-            <input type="text" id="search" class="search-box" placeholder="Mag-type ng pamagat ng pelikula (e.g. Deadpool, Iron Man, Avatar)...">
-        </div>
-    </header>
+<div class="header">
+<h1 class="logo">JAILEEFLIX</h1>
+<div class="tagline">🍿 Movies, Cinema, KDrama, & Anime • Auto-Update Unlimited</div>
+</div>
 
-    <!-- AD SLOT 1: TOP BANNER -->
-    <div class="ads-container" id="ad-top">
-        <p>-- JAILEEFLIX AD SPACE (I-paste dito ang iyong Adsterra Banner Code para magsimulang kumita) --</p>
-    </div>
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Mag-search ng Pelikula, KDrama, o Anime...">
+</div>
 
-    <!-- MAIN MOVIE STREAM GRID -->
-    <main class="movie-container" id="movie-list">
-        <!-- Ang mga pelikula ay awtomatikong lalabas dito nang napakabilis -->
-    </main>
+<div class="tabs-container">
+<button class="tab-btn active" onclick="switchTab('trending')">🔥 Trending Movies</button>
+<button class="tab-btn" onclick="switchTab('cinema')">🎬 Nasa Sinehan Ngayon</button>
+<button class="tab-btn" onclick="switchTab('kdama')">🇰🇷 KDrama Series</button>
+<button class="tab-btn" onclick="switchTab('anime')">🇯🇵 Anime Series</button>
+</div>
 
-    <!-- INFINITE SCROLL LOADING INDICATOR -->
-    <div id="loading" class="loading-trigger">Naglo-load ng mas maraming pelikula...</div>
+<div class="player-container" id="playerContainer">
+<iframe id="mainPlayer" allowfullscreen src=""></iframe>
+<div class="active-title" id="activeTitle">Pelikula</div>
 
-    <!-- VIDEO POPUP MODAL PLAYER -->
-    <div id="movieModal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" id="closeModal">✕ ISARA ANG VIDEO</button>
-            <div class="video-wrapper">
-                <iframe id="moviePlayer" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-            </div>
-            <div class="modal-footer">
-                <span id="modalMovieTitle">Pamagat ng Pelikula</span>
-                <span style="color: #aaa; font-size: 11px; font-weight: normal;">Tip: Kung may lumabas na ad popup, isara lang ito at i-click ulit ang play.</span>
-            </div>
-        </div>
-    </div>
+<div class="episode-selector" id="episodeSelector" style="display: none;">
+<div>
+<label>Season: </label>
+<select id="seasonSelect" onchange="changeSeason()"></select>
+</div>
+<div>
+<label>Episode: </label>
+<select id="episodeSelect" onchange="changeEpisode()"></select>
+</div>
+</div>
+</div>
 
-    <script>
-        const movieList = document.getElementById('movie-list');
-        const searchInput = document.getElementById('search');
-        const loadingTrigger = document.getElementById('loading');
-        const movieModal = document.getElementById('movieModal');
-        const moviePlayer = document.getElementById('moviePlayer');
-        const modalMovieTitle = document.getElementById('modalMovieTitle');
-        const closeModal = document.getElementById('closeModal');
+<div class="movie-section">
+<div class="section-title" id="mainSectionTitle">Trending Ngayong Araw</div>
+<div class="movie-grid" id="movieGrid"></div>
+</div>
 
-        let page = 1;
-        let isSearching = false;
-        let currentSearchQuery = '';
-        let isLoading = false;
+<script>
+const API_KEY = "841804a6012658a98980af866b1a201b";
+const BASE_URL = "https://themoviedb.org"; 
+const IMG_URL = "https://tmdb.org"; 
+const STREAM_URL = "https://vidsrc.sh";
 
-        async function loadMovies(fetchPage, query = '') {
-            if (isLoading) return;
-            isLoading = true;
-            loadingTrigger.style.display = 'block';
+let currentTab = 'trending';
+let currentActiveId = '';
+let currentActiveType = 'movie';
+let globalSeasonsData = []; 
 
-            let url = `https://themoviedb.org{fetchPage}`;
-            if (query) {
-                url = `https://themoviedb.org{encodeURIComponent(query)}&page=${fetchPage}`;
+document.addEventListener("DOMContentLoaded", () => {
+    loadTabContent();
+});
+
+function switchTab(tabName) {
+    currentTab = tabName;
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    if(event && event.target) {
+        event.target.classList.add('active');
+    }
+    document.getElementById('searchInput').value = '';
+    loadTabContent();
+}
+
+function loadTabContent() {
+    let url = '';
+    let title = '';
+
+    if (currentTab === 'trending') {
+        url = `${BASE_URL}/trending/movie/day?api_key=${API_KEY}`;
+        title = "Trending Ngayong Araw";
+    } else if (currentTab === 'cinema') {
+        url = `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&region=PH`;
+        title = "Nasa mga Sinehan Ngayon";
+    } else if (currentTab === 'kdama') {
+        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&sort_by=popularity.desc`;
+        title = "Mga Patok na KDrama Series";
+    } else if (currentTab === 'anime') {
+        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
+        title = "Anime Series Library";
+    }
+
+    document.getElementById('mainSectionTitle').innerText = title;
+    getMedia(url, (currentTab === 'trending' || currentTab === 'cinema') ? 'movie' : 'tv');
+}
+
+document.getElementById('searchInput').addEventListener('keyup', (e) => {
+    const query = e.target.value.trim();
+    if(query) {
+        document.getElementById('mainSectionTitle').innerText = `Resulta para sa: "${query}"`;
+        getMedia(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}`, 'multi');
+    } else {
+        loadTabContent();
+    }
+});
+
+function getMedia(url, type) {
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            if(data.results && data.results.length > 0) {
+                showMedia(data.results, type);
+            } else {
+                document.getElementById('movieGrid').innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:#aaa;'>Walang nahanap. Subukan ang ibang pamagat.</p>";
             }
+        })
+        .catch(err => console.error("Error fetching data:", err));
+}
 
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.results && data.results.length > 0) {
-                    displayMovies(data.results, fetchPage === 1);
-                } else if (fetchPage === 1) {
-                    movieList.innerHTML = `<h2 style="grid-column:1/-1; text-align:center; padding:40px; color:#666;">Walang nahanap na pelikula. Subukan ang ibang pamagat.</h2>`;
-                }
-            } catch (error) {
-                console.error("Bigo sa pag-load ng mga pelikula:", error);
-            } finally {
-                isLoading = false;
-                loadingTrigger.style.display = 'none';
-            }
-        }
+function showMedia(items, globalType) {
+    const grid = document.getElementById('movieGrid');
+    grid.innerHTML = '';
 
-        function displayMovies(movies, clearGrid) {
-            if (clearGrid) movieList.innerHTML = '';
+    items.forEach(item => {
+        if(!item.poster_path) return;
 
-            movies.forEach(movie => {
-                if (!movie.poster_path) return; 
-                
-                const card = document.createElement('div');
-                card.classList.add('movie-card');
-                
-                const year = movie.release_date ? movie.release_date.split('-') : 'N/A';
-                const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '0.0';
+        let mediaType = globalType === 'multi' ? item.media_type : globalType;
+        if (mediaType !== 'movie' && mediaType !== 'tv') return;
 
-                card.innerHTML = `
-                    <div class="play-badge">Full Movie</div>
-                    <div class="poster-container">
-                        <img src="https://tmdb.org{movie.poster_path}" alt="${movie.title}" loading="lazy">
-                    </div>
-                    <div class="movie-info">
-                        <div class="movie-title" title="${movie.title}">${movie.title}</div>
-                        <div class="movie-meta">
-                            <span>${year[0]}</span>
-                            <span class="movie-rating">★ ${rating}</span>
-                        </div>
-                    </div>
-                `;
+        const name = item.title || item.name;
+        const card = document.createElement('div');
+        card.classList.add('movie-card');
 
-                card.addEventListener('click', () => {
-                    playMovie(movie.id, movie.title);
+        card.onclick = () => playMedia(item.id, mediaType, name);
+
+        card.innerHTML = `
+            <img src="${IMG_URL}${item.poster_path}" class="poster-img" alt="${name}">
+            <div class="title-box">${name}</div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function playMedia(id, type, title) {
+    currentActiveId = id;
+    currentActiveType = type;
+
+    const playerContainer = document.getElementById('playerContainer');
+    const mainPlayer = document.getElementById('mainPlayer');
+    const activeTitle = document.getElementById('activeTitle');
+    const episodeSelector = document.getElementById('episodeSelector');
+
+    activeTitle.innerText = title;
+    playerContainer.style.display = 'block';
+    playerContainer.scrollIntoView({ behavior: 'smooth' });
+
+    if (type === 'movie') {
+        episodeSelector.style.display = 'none';
+        mainPlayer.src = `${STREAM_URL}/movie/${id}`;
+    } else {
+        episodeSelector.style.display = 'flex';
+
+        fetch(`${BASE_URL}/tv/${id}?api_key=${API_KEY}`)
+            .then(res => res.json())
+            .then(data => {
+                globalSeasonsData = data.seasons || [];
+                const seasonSelect = document.getElementById('seasonSelect');
+                seasonSelect.innerHTML = '';
+
+                globalSeasonsData.forEach(season => {
+                    if(season.season_number === 0) return; 
+                    const opt = document.createElement('option');
+                    opt.value = season.season_number;
+                    opt.innerText = `Season ${season.season_number}`;
+                    seasonSelect.appendChild(opt);
                 });
 
-                movieList.appendChild(card);
-            });
+                updateEpisodes();
+            })
+            .catch(err => console.error("Error fetching details:", err));
+    }
+}
+
+function changeSeason() {
+    updateEpisodes();
+}
+
+function updateEpisodes() {
+    const seasonSelect = document.getElementById('seasonSelect');
+    const episodeSelect = document.getElementById('episodeSelect');
+    const activeSeasonNum = parseInt(seasonSelect.value) || 1;
+
+    const currentSeason = globalSeasonsData.find(s => s.season_number === activeSeasonNum);
+    episodeSelect.innerHTML = '';
+
+    if (currentSeason) {
+        for (let i = 1; i <= currentSeason.episode_count; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.innerText = `Episode ${i}`;
+            episodeSelect.appendChild(opt);
         }
+    }
+    changeEpisode();
+}
 
-        function playMovie(id, title) {
-            modalMovieTitle.innerText = title;
-            moviePlayer.src = `https://vidsrc.to{id}`;
-            movieModal.style.display = 'block';
-            document.body.style.overflow = 'hidden'; 
-        }
+function changeEpisode() {
+    const mainPlayer = document.getElementById('mainPlayer');
+    const season = document.getElementById('seasonSelect').value || 1;
+    const episode = document.getElementById('episodeSelect').value || 1;
 
-        closeModal.addEventListener('click', () => {
-            movieModal.style.display = 'none';
-            moviePlayer.src = '';
-            document.body.style.overflow = 'auto';
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target === movieModal) {
-                movieModal.style.display = 'none';
-                moviePlayer.src = '';
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        let debounceTimer;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                const query = e.target.value.trim();
-                page = 1;
