@@ -1,286 +1,201 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101010">
-<title>JAILEEFLIX | Free Cinema</title>
-<meta name="description" content="Discover classic cinema and legally available independent films.">
-<style>
-:root{--bg:#101010;--card:#202020;--red:#e50914;--muted:#aaa}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
-header{position:sticky;top:0;z-index:5;background:#101010;
-display:flex;align-items:center;gap:15px;flex-wrap:wrap;padding:15px 5%;
-border-bottom:1px solid #303030}
-.logo{font-size:26px;font-weight:900;color:var(--red)}
-header input{flex:1;min-width:130px;max-width:420px;background:#242424;
-color:white;border:1px solid #555;border-radius:5px;padding:12px}
-.hero{padding:40px 5%;background:linear-gradient(90deg,#191919,#101010);
-min-height:220px}
-.hero h1{font-size:clamp(28px,5vw,46px);margin:8px 0}
-.hero p{color:#ccc;line-height:1.6;max-width:650px}
-button,.button{border:0;border-radius:5px;padding:11px 15px;
-font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}
-.primary{background:var(--red);color:white}
-.secondary{background:#333;color:white}
-.filters{display:flex;gap:8px;overflow-x:auto;padding:18px 5%}
-.filters button{white-space:nowrap;background:#292929;color:white}
-.filters button.active{background:var(--red)}
-.ad-slot{margin:18px auto;max-width:970px;min-height:0;text-align:center}
-.ad-label{font-size:11px;color:#888}
-section.shelf{padding:8px 5% 20px}
-h2{font-size:20px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card{background:var(--card);border-radius:7px;overflow:hidden}
-.poster{width:100%;aspect-ratio:2/3;object-fit:cover;background:#303030;display:block}
-.info{padding:10px}
-.info h3{font-size:14px;margin:0 0 7px;line-height:1.4}
-.info p{font-size:12px;color:#bbb;line-height:1.5}
-.info a{margin-top:5px}
-.badge{color:#bbb;font-size:11px}
-.empty{color:#aaa;line-height:1.6}
-footer{padding:28px 5%;border-top:1px solid #333;color:#aaa;
-font-size:13px;line-height:1.9}
-footer a{color:white}
-dialog{width:min(850px,95vw);max-height:90vh;overflow:auto;
-padding:15px;background:#181818;color:white;border:1px solid #444;border-radius:8px}
-dialog::backdrop{background:#000c}
-dialog video{width:100%;background:black;max-height:65vh}
-.close{float:right;background:#333;color:white}
-#playerStatus{font-size:13px;color:#ccc;line-height:1.6}
-@media(min-width:550px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(min-width:850px){.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
-</style>
-</head>
-<body>
-
-<header>
-  <div class="logo">JAILEEFLIX</div>
-  <input id="search" type="search" placeholder="Search films..."
-    aria-label="Search films">
-</header>
-
-<div class="hero">
-  <div style="color:#e50914;font-weight:bold">FREE CINEMA</div>
-  <h1>Classic Movies. No Login.</h1>
-  <p>Discover classic films and independent cinema available
-  for free viewing. Every film must have verified streaming rights.</p>
-  <button class="primary" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">
-    Explore Movies
-  </button>
-</div>
-
-<div class="ad-slot">
-  <div class="ad-label">Advertisement</div>
-  <!-- Insert your approved ad provider's code here.
-       Do not display fake ads or click buttons. -->
-  <div id="topAd"></div>
-</div>
-
-<div class="filters" id="filters">
-  <button class="active" data-category="All">All Films</button>
-  <button data-category="Adventure">Adventure</button>
-  <button data-category="Comedy">Comedy</button>
-  <button data-category="Drama">Drama</button>
-  <button data-category="Documentary">Documentary</button>
-  <button data-category="Short Film">Short Films</button>
-</div>
-
-<section class="shelf" id="catalog">
-  <h2 id="heading">Available Films</h2>
-  <p class="empty" id="status">Loading catalog...</p>
-  <div class="grid" id="grid"></div>
-</section>
-
-<div class="ad-slot">
-  <div class="ad-label">Advertisement</div>
-  <div id="bottomAd"></div>
-</div>
-
-<dialog id="watchDialog">
-  <button class="close" id="closePlayer">Close ✕</button>
-  <h2 id="watchTitle">Film</h2>
-  <p id="watchRights" class="empty"></p>
-  <video id="video" controls playsinline preload="metadata"></video>
-  <p id="playerStatus"></p>
-  <p><a id="sourceLink" target="_blank" rel="noopener noreferrer"
-    style="color:#fff">View original source and license</a></p>
-</dialog>
-
-<footer>
-  <strong>JAILEEFLIX</strong><br>
-  Free viewing does not automatically mean free commercial reuse.
-  Film availability depends on the individual rights and license.
-  <p>
-    <a href="https://archive.org/details/movies" target="_blank"
-    rel="noopener noreferrer">Internet Archive Movies</a> ·
-    <a href="https://commons.wikimedia.org/wiki/Category:Videos"
-    target="_blank" rel="noopener noreferrer">Wikimedia videos</a>
-  </p>
-  <p>
-    Contact: replace this text with your business email.<br>
-    Add your own Privacy Policy, Terms of Use, and Copyright/DMCA
-    contact page before applying for advertising approval.
-  </p>
-</footer>
-
-<script>
 "use strict";
 
-/*
-  ADD ONLY FILMS YOU HAVE VERIFIED.
+const dialog = document.getElementById("watchDialog");
+const mediaContainer = document.getElementById("mediaContainer");
+const searchInput = document.getElementById("search");
+const playHeroBtn = document.getElementById("playHeroBtn");
 
-  streamUrl: direct HTTPS video URL, such as a compatible MP4.
-  sourceUrl: original rights/film page.
-  commercialRights: evidence of public-domain status or a license
-  that permits commercial streaming.
-
-  Never assume that every Internet Archive item is public domain.
-  An item's source page alone does not prove commercial rights.
-*/
-const films = [
-  /*
-  Example configuration — replace with a verified film:
-
+const sections = [
   {
-    title: "Verified Film Title",
-    year: "1920",
-    category: "Drama",
-    poster: "https://your-site.example/poster.jpg",
-    streamUrl: "https://your-authorized-host.example/film.mp4",
-    sourceUrl: "https://original-rights-holder.example/film",
-    commercialRights: "Public-domain evidence or commercial license URL",
-    rightsVerified: true,
-    description: "Short original description of the film."
+    rowId: "comedy-row",
+    query: 'mediatype:movies AND subject:Comedy'
+  },
+  {
+    rowId: "scifi-row",
+    query: 'mediatype:movies AND (subject:"Science fiction" OR subject:Horror)'
+  },
+  {
+    rowId: "action-row",
+    query: 'mediatype:movies AND (subject:Action OR subject:Adventure)'
   }
-  */
 ];
 
-const grid = document.getElementById("grid");
-const status = document.getElementById("status");
-const search = document.getElementById("search");
-const dialog = document.getElementById("watchDialog");
-const video = document.getElementById("video");
-let category = "All";
+const allMovies = new Map();
 
-function safeURL(value) {
-  try {
-    const u = new URL(value);
-    return u.protocol === "https:" ? u.href : "";
-  } catch {
-    return "";
-  }
+window.addEventListener("scroll", () => {
+  document.getElementById("navbar")
+    .classList.toggle("scrolled", window.scrollY > 50);
+});
+
+function cleanDescription(value) {
+  if (Array.isArray(value)) value = value.join(" ");
+  if (typeof value !== "string") return "Classic film available in the Internet Archive catalog.";
+  return value.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 }
 
-function render() {
-  grid.replaceChildren();
-  const query = search.value.trim().toLowerCase();
+async function loadSection(section) {
+  const row = document.getElementById(section.rowId);
+  row.replaceChildren();
 
-  const visible = films.filter(f =>
-    (category === "All" || f.category === category) &&
-    (String(f.title).toLowerCase().includes(query) ||
-     String(f.description || "").toLowerCase().includes(query))
-  );
+  const loading = document.createElement("p");
+  loading.className = "loading-msg";
+  loading.textContent = "Loading movies...";
+  row.appendChild(loading);
 
-  status.textContent = visible.length
-    ? visible.length + " film(s) in the catalog."
-    : "No films listed yet. Add verified film entries to the films array in this HTML file.";
-
-  visible.forEach(f => {
-    const card = document.createElement("article");
-    card.className = "card";
-
-    const img = document.createElement("img");
-    img.className = "poster";
-    img.loading = "lazy";
-    img.alt = f.title + " poster";
-    img.src = safeURL(f.poster) || "";
-    img.onerror = () => {
-      img.removeAttribute("src");
-      img.alt = "Poster unavailable";
-    };
-
-    const info = document.createElement("div");
-    info.className = "info";
-
-    const title = document.createElement("h3");
-    title.textContent = f.title;
-
-    const meta = document.createElement("div");
-    meta.className = "badge";
-    meta.textContent = [f.year, f.category].filter(Boolean).join(" · ");
-
-    const desc = document.createElement("p");
-    desc.textContent = f.description || "Film description unavailable.";
-
-    const play = document.createElement("button");
-    play.className = "primary";
-    play.textContent = "▶ Watch Now";
-    play.addEventListener("click", () => openFilm(f));
-
-    info.append(title, meta, desc, play);
-    card.append(img, info);
-    grid.append(card);
+  const params = new URLSearchParams({
+    q: section.query,
+    "fl[]": "identifier,title,description,year",
+    rows: "24",
+    page: "1",
+    output: "json",
+    "sort[]": "downloads desc"
   });
-}
 
-function openFilm(f) {
-  const stream = safeURL(f.streamUrl);
-  const source = safeURL(f.sourceUrl);
+  const url = "https://archive.org/advancedsearch.php?" + params.toString();
 
-  document.getElementById("watchTitle").textContent = f.title;
-  document.getElementById("watchRights").textContent =
-    "Rights: " + (f.commercialRights || "Not documented");
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Archive search failed");
 
-  const link = document.getElementById("sourceLink");
-  link.href = source || "https://archive.org/details/movies";
+    const data = await response.json();
+    const docs = data?.response?.docs || [];
 
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
+    row.replaceChildren();
 
-  const message = document.getElementById("playerStatus");
+    if (!docs.length) {
+      const message = document.createElement("p");
+      message.className = "loading-msg";
+      message.textContent = "No movies found in this category. Try another shelf.";
+      row.appendChild(message);
+      return;
+    }
 
-  if (!f.rightsVerified || !f.commercialRights || !stream || !source) {
+    docs.forEach(doc => {
+      if (!doc.identifier || !doc.title) return;
+
+      const movie = {
+        id: doc.identifier,
+        title: Array.isArray(doc.title) ? doc.title[0] : doc.title,
+        year: doc.year || "Classic",
+        description: cleanDescription(doc.description)
+      };
+
+      if (allMovies.has(movie.id)) return;
+      allMovies.set(movie.id, movie);
+
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "card";
+      card.style.padding = "0";
+      card.style.border = "0";
+      card.style.color = "white";
+      card.style.textAlign = "left";
+      card.setAttribute("aria-label", "Watch " + movie.title);
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "poster-wrapper";
+
+      const img = document.createElement("img");
+      img.className = "poster";
+      img.loading = "lazy";
+      img.alt = movie.title;
+      img.src = "https://archive.org/services/img/" +
+        encodeURIComponent(movie.id);
+
+      img.onerror = () => {
+        img.onerror = null;
+        img.style.display = "none";
+        wrapper.style.background =
+          "linear-gradient(135deg,#252525,#5a1015)";
+      };
+
+      const overlay = document.createElement("div");
+      overlay.className = "card-overlay";
+      overlay.style.opacity = "1";
+
+      const year = document.createElement("div");
+      year.className = "card-meta";
+      year.textContent = movie.year;
+
+      const title = document.createElement("h3");
+      title.textContent = movie.title;
+
+      const desc = document.createElement("p");
+      desc.className = "card-desc";
+      desc.textContent = movie.description;
+
+      overlay.append(year, title, desc);
+      wrapper.append(img, overlay);
+      card.appendChild(wrapper);
+
+      card.addEventListener("click", () => openMovie(movie));
+      row.appendChild(card);
+    });
+
+    if (!row.children.length) {
+      const message = document.createElement("p");
+      message.className = "loading-msg";
+      message.textContent = "No new movies found in this category.";
+      row.appendChild(message);
+    }
+  } catch (error) {
+    console.error("Movie catalog error:", error);
+    row.replaceChildren();
+
+    const message = document.createElement("p");
+    message.className = "loading-msg";
     message.textContent =
-      "Playback disabled: add a valid video URL, original source, " +
-      "and documented commercial streaming rights before publishing.";
-  } else {
-    video.src = stream;
-    message.textContent =
-      "If playback fails, check that the video host permits embedding " +
-      "and supports HTTPS video playback.";
+      "Could not load movies. Please refresh and try again.";
+    row.appendChild(message);
   }
-
-  dialog.showModal();
 }
+
+function openMovie(movie) {
+  document.getElementById("watchTitle").textContent = movie.title;
+  document.getElementById("watchYear").textContent = movie.year;
+  document.getElementById("watchDesc").textContent = movie.description;
+
+  mediaContainer.replaceChildren();
+
+  const iframe = document.createElement("iframe");
+  iframe.src = "https://archive.org/embed/" +
+    encodeURIComponent(movie.id);
+  iframe.title = "Watch " + movie.title;
+  iframe.allow = "autoplay; fullscreen";
+  iframe.allowFullscreen = true;
+  iframe.referrerPolicy = "strict-origin-when-cross-origin";
+
+  mediaContainer.appendChild(iframe);
+
+  if (!dialog.open) dialog.showModal();
+}
+
+playHeroBtn.addEventListener("click", () => {
+  openMovie({
+    id: "Night.Of.The.Living.Dead_1080p",
+    title: "Night of the Living Dead",
+    year: "1968",
+    description:
+      "A group of survivors barricade themselves inside a farmhouse as the dead begin to rise."
+  });
+});
+
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.toLowerCase().trim();
+
+  document.querySelectorAll(".card").forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = text.includes(query) ? "" : "none";
+  });
+});
 
 document.getElementById("closePlayer").addEventListener("click", () => {
   dialog.close();
 });
 
 dialog.addEventListener("close", () => {
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
+  mediaContainer.replaceChildren();
 });
 
-search.addEventListener("input", render);
-
-document.getElementById("filters").addEventListener("click", e => {
-  const btn = e.target.closest("button[data-category]");
-  if (!btn) return;
-  category = btn.dataset.category;
-
-  document.querySelectorAll("#filters button").forEach(b =>
-    b.classList.toggle("active", b === btn)
-  );
-  render();
-});
-
-render();
-</script>
-</body>
-</html>
+Promise.all(sections.map(loadSection));
