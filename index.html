@@ -1,368 +1,286 @@
+
 <!DOCTYPE html>
-<html lang="tl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JAILEEFLIX - Ultimate Streaming Application</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101010">
+<title>JAILEEFLIX | Free Cinema</title>
+<meta name="description" content="Discover classic cinema and legally available independent films.">
 <style>
-body {
-background-color: #141414;
-color: white;
-font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-margin: 0;
-padding: 20px;
-}
-.header {
-text-align: center;
-padding: 20px 0;
-}
-.logo {
-color: #E50914;
-font-size: 3.5rem;
-font-weight: bold;
-letter-spacing: 2px;
-margin: 0;
-text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
-}
-.tagline {
-color: #aaa;
-font-size: 0.9rem;
-margin-top: 5px;
-}
-.search-box {
-text-align: center;
-margin: 20px 0;
-}
-.search-box input {
-width: 85%;
-max-width: 500px;
-padding: 14px 20px;
-border-radius: 30px;
-border: 1px solid #444;
-background-color: #222;
-color: white;
-font-size: 1rem;
-outline: none;
-text-align: center;
-transition: border 0.3s;
-}
-.search-box input:focus {
-border: 1px solid #E50914;
-}
-.tabs-container {
-display: flex;
-justify-content: center;
-gap: 10px;
-margin: 20px 0;
-flex-wrap: wrap;
-}
-.tab-btn {
-background-color: #222;
-color: white;
-border: 1px solid #333;
-padding: 10px 20px;
-border-radius: 20px;
-cursor: pointer;
-font-weight: bold;
-font-size: 0.9rem;
-transition: all 0.3s;
-}
-.tab-btn.active, .tab-btn:hover {
-background-color: #E50914;
-border-color: #E50914;
-}
-.player-container {
-max-width: 900px;
-margin: 20px auto;
-background: #000;
-padding: 15px;
-border-radius: 8px;
-display: none;
-box-shadow: 0px 4px 20px rgba(229, 9, 20, 0.4);
-}
-iframe {
-width: 100%;
-height: 450px;
-border: none;
-border-radius: 4px;
-}
-@media (max-width: 600px) {
-iframe { height: 250px; }
-}
-.active-title {
-margin-top: 12px;
-font-size: 1.3rem;
-font-weight: bold;
-text-align: center;
-color: #E50914;
-}
-.episode-selector {
-margin-top: 15px;
-display: flex;
-gap: 15px;
-justify-content: center;
-background: #222;
-padding: 10px;
-border-radius: 6px;
-}
-.episode-selector label {
-font-weight: bold;
-font-size: 0.9rem;
-align-self: center;
-}
-.episode-selector select {
-background: #000;
-color: white;
-border: 1px solid #444;
-padding: 5px 10px;
-border-radius: 4px;
-outline: none;
-}
-.movie-section {
-max-width: 1200px;
-margin: 40px auto;
-}
-.section-title {
-font-size: 1.6rem;
-font-weight: bold;
-margin-bottom: 20px;
-border-left: 5px solid #E50914;
-padding-left: 12px;
-text-transform: uppercase;
-letter-spacing: 1px;
-}
-.movie-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-gap: 20px;
-}
-.movie-card {
-background-color: #1f1f1f;
-border-radius: 8px;
-overflow: hidden;
-cursor: pointer;
-transition: transform 0.3s, box-shadow 0.3s;
-box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}
-.movie-card:hover {
-transform: scale(1.08);
-box-shadow: 0 8px 15px rgba(229,9,20,0.3);
-}
-.poster-img {
-width: 100%;
-height: 210px;
-object-fit: cover;
-border-bottom: 3px solid #E50914;
-}
-.title-box {
-padding: 10px;
-font-size: 0.85rem;
-text-align: center;
-font-weight: bold;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
-}
+:root{--bg:#101010;--card:#202020;--red:#e50914;--muted:#aaa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#101010;
+display:flex;align-items:center;gap:15px;flex-wrap:wrap;padding:15px 5%;
+border-bottom:1px solid #303030}
+.logo{font-size:26px;font-weight:900;color:var(--red)}
+header input{flex:1;min-width:130px;max-width:420px;background:#242424;
+color:white;border:1px solid #555;border-radius:5px;padding:12px}
+.hero{padding:40px 5%;background:linear-gradient(90deg,#191919,#101010);
+min-height:220px}
+.hero h1{font-size:clamp(28px,5vw,46px);margin:8px 0}
+.hero p{color:#ccc;line-height:1.6;max-width:650px}
+button,.button{border:0;border-radius:5px;padding:11px 15px;
+font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}
+.primary{background:var(--red);color:white}
+.secondary{background:#333;color:white}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:18px 5%}
+.filters button{white-space:nowrap;background:#292929;color:white}
+.filters button.active{background:var(--red)}
+.ad-slot{margin:18px auto;max-width:970px;min-height:0;text-align:center}
+.ad-label{font-size:11px;color:#888}
+section.shelf{padding:8px 5% 20px}
+h2{font-size:20px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:var(--card);border-radius:7px;overflow:hidden}
+.poster{width:100%;aspect-ratio:2/3;object-fit:cover;background:#303030;display:block}
+.info{padding:10px}
+.info h3{font-size:14px;margin:0 0 7px;line-height:1.4}
+.info p{font-size:12px;color:#bbb;line-height:1.5}
+.info a{margin-top:5px}
+.badge{color:#bbb;font-size:11px}
+.empty{color:#aaa;line-height:1.6}
+footer{padding:28px 5%;border-top:1px solid #333;color:#aaa;
+font-size:13px;line-height:1.9}
+footer a{color:white}
+dialog{width:min(850px,95vw);max-height:90vh;overflow:auto;
+padding:15px;background:#181818;color:white;border:1px solid #444;border-radius:8px}
+dialog::backdrop{background:#000c}
+dialog video{width:100%;background:black;max-height:65vh}
+.close{float:right;background:#333;color:white}
+#playerStatus{font-size:13px;color:#ccc;line-height:1.6}
+@media(min-width:550px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:850px){.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
 </style>
 </head>
 <body>
 
-<div class="header">
-<h1 class="logo">JAILEEFLIX</h1>
-<div class="tagline">🍿 Movies, Cinema, KDrama, & Anime • Auto-Update Unlimited</div>
+<header>
+  <div class="logo">JAILEEFLIX</div>
+  <input id="search" type="search" placeholder="Search films..."
+    aria-label="Search films">
+</header>
+
+<div class="hero">
+  <div style="color:#e50914;font-weight:bold">FREE CINEMA</div>
+  <h1>Classic Movies. No Login.</h1>
+  <p>Discover classic films and independent cinema available
+  for free viewing. Every film must have verified streaming rights.</p>
+  <button class="primary" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">
+    Explore Movies
+  </button>
 </div>
 
-<div class="search-box">
-<input type="text" id="searchInput" placeholder="Mag-search ng Pelikula, KDrama, o Anime...">
+<div class="ad-slot">
+  <div class="ad-label">Advertisement</div>
+  <!-- Insert your approved ad provider's code here.
+       Do not display fake ads or click buttons. -->
+  <div id="topAd"></div>
 </div>
 
-<div class="tabs-container">
-<button class="tab-btn active" onclick="switchTab('trending')">🔥 Trending Movies</button>
-<button class="tab-btn" onclick="switchTab('cinema')">🎬 Nasa Sinehan Ngayon</button>
-<button class="tab-btn" onclick="switchTab('kdama')">🇰🇷 KDrama Series</button>
-<button class="tab-btn" onclick="switchTab('anime')">🇯🇵 Anime Series</button>
+<div class="filters" id="filters">
+  <button class="active" data-category="All">All Films</button>
+  <button data-category="Adventure">Adventure</button>
+  <button data-category="Comedy">Comedy</button>
+  <button data-category="Drama">Drama</button>
+  <button data-category="Documentary">Documentary</button>
+  <button data-category="Short Film">Short Films</button>
 </div>
 
-<div class="player-container" id="playerContainer">
-<iframe id="mainPlayer" allowfullscreen src=""></iframe>
-<div class="active-title" id="activeTitle">Pelikula</div>
+<section class="shelf" id="catalog">
+  <h2 id="heading">Available Films</h2>
+  <p class="empty" id="status">Loading catalog...</p>
+  <div class="grid" id="grid"></div>
+</section>
 
-<div class="episode-selector" id="episodeSelector" style="display: none;">
-<div>
-<label>Season: </label>
-<select id="seasonSelect" onchange="changeSeason()"></select>
-</div>
-<div>
-<label>Episode: </label>
-<select id="episodeSelect" onchange="changeEpisode()"></select>
-</div>
-</div>
+<div class="ad-slot">
+  <div class="ad-label">Advertisement</div>
+  <div id="bottomAd"></div>
 </div>
 
-<div class="movie-section">
-<div class="section-title" id="mainSectionTitle">Trending Ngayong Araw</div>
-<div class="movie-grid" id="movieGrid"></div>
-</div>
+<dialog id="watchDialog">
+  <button class="close" id="closePlayer">Close ✕</button>
+  <h2 id="watchTitle">Film</h2>
+  <p id="watchRights" class="empty"></p>
+  <video id="video" controls playsinline preload="metadata"></video>
+  <p id="playerStatus"></p>
+  <p><a id="sourceLink" target="_blank" rel="noopener noreferrer"
+    style="color:#fff">View original source and license</a></p>
+</dialog>
+
+<footer>
+  <strong>JAILEEFLIX</strong><br>
+  Free viewing does not automatically mean free commercial reuse.
+  Film availability depends on the individual rights and license.
+  <p>
+    <a href="https://archive.org/details/movies" target="_blank"
+    rel="noopener noreferrer">Internet Archive Movies</a> ·
+    <a href="https://commons.wikimedia.org/wiki/Category:Videos"
+    target="_blank" rel="noopener noreferrer">Wikimedia videos</a>
+  </p>
+  <p>
+    Contact: replace this text with your business email.<br>
+    Add your own Privacy Policy, Terms of Use, and Copyright/DMCA
+    contact page before applying for advertising approval.
+  </p>
+</footer>
 
 <script>
-const API_KEY = "841804a6012658a98980af866b1a201b";
-const BASE_URL = "https://themoviedb.org"; 
-const IMG_URL = "https://tmdb.org"; 
-const STREAM_URL = "https://vidsrc.sh";
+"use strict";
 
-let currentTab = 'trending';
-let currentActiveId = '';
-let currentActiveType = 'movie';
-let globalSeasonsData = []; 
+/*
+  ADD ONLY FILMS YOU HAVE VERIFIED.
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadTabContent();
+  streamUrl: direct HTTPS video URL, such as a compatible MP4.
+  sourceUrl: original rights/film page.
+  commercialRights: evidence of public-domain status or a license
+  that permits commercial streaming.
+
+  Never assume that every Internet Archive item is public domain.
+  An item's source page alone does not prove commercial rights.
+*/
+const films = [
+  /*
+  Example configuration — replace with a verified film:
+
+  {
+    title: "Verified Film Title",
+    year: "1920",
+    category: "Drama",
+    poster: "https://your-site.example/poster.jpg",
+    streamUrl: "https://your-authorized-host.example/film.mp4",
+    sourceUrl: "https://original-rights-holder.example/film",
+    commercialRights: "Public-domain evidence or commercial license URL",
+    rightsVerified: true,
+    description: "Short original description of the film."
+  }
+  */
+];
+
+const grid = document.getElementById("grid");
+const status = document.getElementById("status");
+const search = document.getElementById("search");
+const dialog = document.getElementById("watchDialog");
+const video = document.getElementById("video");
+let category = "All";
+
+function safeURL(value) {
+  try {
+    const u = new URL(value);
+    return u.protocol === "https:" ? u.href : "";
+  } catch {
+    return "";
+  }
+}
+
+function render() {
+  grid.replaceChildren();
+  const query = search.value.trim().toLowerCase();
+
+  const visible = films.filter(f =>
+    (category === "All" || f.category === category) &&
+    (String(f.title).toLowerCase().includes(query) ||
+     String(f.description || "").toLowerCase().includes(query))
+  );
+
+  status.textContent = visible.length
+    ? visible.length + " film(s) in the catalog."
+    : "No films listed yet. Add verified film entries to the films array in this HTML file.";
+
+  visible.forEach(f => {
+    const card = document.createElement("article");
+    card.className = "card";
+
+    const img = document.createElement("img");
+    img.className = "poster";
+    img.loading = "lazy";
+    img.alt = f.title + " poster";
+    img.src = safeURL(f.poster) || "";
+    img.onerror = () => {
+      img.removeAttribute("src");
+      img.alt = "Poster unavailable";
+    };
+
+    const info = document.createElement("div");
+    info.className = "info";
+
+    const title = document.createElement("h3");
+    title.textContent = f.title;
+
+    const meta = document.createElement("div");
+    meta.className = "badge";
+    meta.textContent = [f.year, f.category].filter(Boolean).join(" · ");
+
+    const desc = document.createElement("p");
+    desc.textContent = f.description || "Film description unavailable.";
+
+    const play = document.createElement("button");
+    play.className = "primary";
+    play.textContent = "▶ Watch Now";
+    play.addEventListener("click", () => openFilm(f));
+
+    info.append(title, meta, desc, play);
+    card.append(img, info);
+    grid.append(card);
+  });
+}
+
+function openFilm(f) {
+  const stream = safeURL(f.streamUrl);
+  const source = safeURL(f.sourceUrl);
+
+  document.getElementById("watchTitle").textContent = f.title;
+  document.getElementById("watchRights").textContent =
+    "Rights: " + (f.commercialRights || "Not documented");
+
+  const link = document.getElementById("sourceLink");
+  link.href = source || "https://archive.org/details/movies";
+
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+
+  const message = document.getElementById("playerStatus");
+
+  if (!f.rightsVerified || !f.commercialRights || !stream || !source) {
+    message.textContent =
+      "Playback disabled: add a valid video URL, original source, " +
+      "and documented commercial streaming rights before publishing.";
+  } else {
+    video.src = stream;
+    message.textContent =
+      "If playback fails, check that the video host permits embedding " +
+      "and supports HTTPS video playback.";
+  }
+
+  dialog.showModal();
+}
+
+document.getElementById("closePlayer").addEventListener("click", () => {
+  dialog.close();
 });
 
-function switchTab(tabName) {
-    currentTab = tabName;
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    if(event && event.target) {
-        event.target.classList.add('active');
-    }
-    document.getElementById('searchInput').value = '';
-    loadTabContent();
-}
-
-function loadTabContent() {
-    let url = '';
-    let title = '';
-
-    if (currentTab === 'trending') {
-        url = `${BASE_URL}/trending/movie/day?api_key=${API_KEY}`;
-        title = "Trending Ngayong Araw";
-    } else if (currentTab === 'cinema') {
-        url = `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&region=PH`;
-        title = "Nasa mga Sinehan Ngayon";
-    } else if (currentTab === 'kdama') {
-        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&sort_by=popularity.desc`;
-        title = "Mga Patok na KDrama Series";
-    } else if (currentTab === 'anime') {
-        url = `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_genres=16&with_original_language=ja&sort_by=popularity.desc`;
-        title = "Anime Series Library";
-    }
-
-    document.getElementById('mainSectionTitle').innerText = title;
-    getMedia(url, (currentTab === 'trending' || currentTab === 'cinema') ? 'movie' : 'tv');
-}
-
-document.getElementById('searchInput').addEventListener('keyup', (e) => {
-    const query = e.target.value.trim();
-    if(query) {
-        document.getElementById('mainSectionTitle').innerText = `Resulta para sa: "${query}"`;
-        getMedia(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}`, 'multi');
-    } else {
-        loadTabContent();
-    }
+dialog.addEventListener("close", () => {
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
 });
 
-function getMedia(url, type) {
-    fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            if(data.results && data.results.length > 0) {
-                showMedia(data.results, type);
-            } else {
-                document.getElementById('movieGrid').innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:#aaa;'>Walang nahanap. Subukan ang ibang pamagat.</p>";
-            }
-        })
-        .catch(err => console.error("Error fetching data:", err));
-}
+search.addEventListener("input", render);
 
-function showMedia(items, globalType) {
-    const grid = document.getElementById('movieGrid');
-    grid.innerHTML = '';
+document.getElementById("filters").addEventListener("click", e => {
+  const btn = e.target.closest("button[data-category]");
+  if (!btn) return;
+  category = btn.dataset.category;
 
-    items.forEach(item => {
-        if(!item.poster_path) return;
+  document.querySelectorAll("#filters button").forEach(b =>
+    b.classList.toggle("active", b === btn)
+  );
+  render();
+});
 
-        let mediaType = globalType === 'multi' ? item.media_type : globalType;
-        if (mediaType !== 'movie' && mediaType !== 'tv') return;
-
-        const name = item.title || item.name;
-        const card = document.createElement('div');
-        card.classList.add('movie-card');
-
-        card.onclick = () => playMedia(item.id, mediaType, name);
-
-        card.innerHTML = `
-            <img src="${IMG_URL}${item.poster_path}" class="poster-img" alt="${name}">
-            <div class="title-box">${name}</div>
-        `;
-        grid.appendChild(card);
-    });
-}
-
-function playMedia(id, type, title) {
-    currentActiveId = id;
-    currentActiveType = type;
-
-    const playerContainer = document.getElementById('playerContainer');
-    const mainPlayer = document.getElementById('mainPlayer');
-    const activeTitle = document.getElementById('activeTitle');
-    const episodeSelector = document.getElementById('episodeSelector');
-
-    activeTitle.innerText = title;
-    playerContainer.style.display = 'block';
-    playerContainer.scrollIntoView({ behavior: 'smooth' });
-
-    if (type === 'movie') {
-        episodeSelector.style.display = 'none';
-        mainPlayer.src = `${STREAM_URL}/movie/${id}`;
-    } else {
-        episodeSelector.style.display = 'flex';
-
-        fetch(`${BASE_URL}/tv/${id}?api_key=${API_KEY}`)
-            .then(res => res.json())
-            .then(data => {
-                globalSeasonsData = data.seasons || [];
-                const seasonSelect = document.getElementById('seasonSelect');
-                seasonSelect.innerHTML = '';
-
-                globalSeasonsData.forEach(season => {
-                    if(season.season_number === 0) return; 
-                    const opt = document.createElement('option');
-                    opt.value = season.season_number;
-                    opt.innerText = `Season ${season.season_number}`;
-                    seasonSelect.appendChild(opt);
-                });
-
-                updateEpisodes();
-            })
-            .catch(err => console.error("Error fetching details:", err));
-    }
-}
-
-function changeSeason() {
-    updateEpisodes();
-}
-
-function updateEpisodes() {
-    const seasonSelect = document.getElementById('seasonSelect');
-    const episodeSelect = document.getElementById('episodeSelect');
-    const activeSeasonNum = parseInt(seasonSelect.value) || 1;
-
-    const currentSeason = globalSeasonsData.find(s => s.season_number === activeSeasonNum);
-    episodeSelect.innerHTML = '';
-
-    if (currentSeason) {
-        for (let i = 1; i <= currentSeason.episode_count; i++) {
-            const opt = document.createElement('option');
-            opt.value = i;
-            opt.innerText = `Episode ${i}`;
-            episodeSelect.appendChild(opt);
-        }
-    }
-    changeEpisode();
-}
-
-function changeEpisode() {
-    const mainPlayer = document.getElementById('mainPlayer');
-    const season = document.getElementById('seasonSelect').value || 1;
-    const episode = document.getElementById('episodeSelect').value || 1;
-
+render();
+</script>
+</body>
+</html>
